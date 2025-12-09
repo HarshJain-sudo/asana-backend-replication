@@ -1,0 +1,5 @@
+"""
+Serializers for typeahead API endpoints.
+"""
+from rest_framework import serializers
+

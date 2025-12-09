@@ -1,0 +1,35 @@
+from abc import ABC, abstractmethod
+from typing import List, Optional
+{% if models %}
+{% for model in models %}
+from {{ app_name }}.models.{{ model.module }} import {{ model.class }}
+{% endfor %}
+{% endif %}
+
+
+class StorageInterface(ABC):
+    """Storage interface for {{ resource }} operations."""
+    
+{% for method in methods %}
+    @abstractmethod
+    def {{ method.name }}(
+        self,
+{% for param in method.parameters %}
+        {{ param.name }}: {{ param.type }}{% if param.optional %} = {{ param.default }}{% endif %},
+{% endfor %}
+    ) -> {{ method.return_type }}:
+        """
+        {{ method.description }}
+        
+        Args:
+{% for param in method.parameters %}
+            {{ param.name }}: {{ param.description }}
+{% endfor %}
+        
+        Returns:
+            {{ method.return_description }}
+        """
+        pass
+    
+{% endfor %}
+

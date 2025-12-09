@@ -1,0 +1,85 @@
+from typing import List, Optional
+{% if models %}
+{% for model in models %}
+from {{ model.app }}.models.{{ model.module }} import {{ model.class }}
+{% endfor %}
+{% endif %}
+from {{ app_name }}.interactors.storage_interfaces.storage_interface import (
+    StorageInterface
+)
+
+
+class StorageImplementation(StorageInterface):
+    """Storage implementation for {{ resource }} operations."""
+    
+{% for method in methods %}
+    def {{ method.name }}(
+        self,
+{% for param in method.parameters %}
+        {{ param.name }}: {{ param.type }}{% if param.optional %} = {{ param.default }}{% endif %},
+{% endfor %}
+    ) -> {{ method.return_type }}:
+        """{{ method.description }}"""
+{% if method.implementation_type == 'get_single' %}
+        try:
+            return {{ method.model }}.objects.get(
+                {{ method.filter_field }}={{ method.filter_param }}
+            )
+        except {{ method.model }}.DoesNotExist:
+            return None
+{% elif method.implementation_type == 'get_list' %}
+        queryset = {{ method.model }}.objects.all()
+        
+{% if method.filters %}
+{% for filter in method.filters %}
+        if {{ filter.param }} is not None:
+            queryset = queryset.filter({{ filter.field }}={{ filter.param }})
+{% endfor %}
+        
+{% endif %}
+        return list(queryset[{{ method.offset_param }}:{{ method.offset_param }} + {{ method.limit_param }}])
+{% elif method.implementation_type == 'create' %}
+{% if method.related_objects %}
+{% for related in method.related_objects %}
+        {{ related.variable }} = {{ related.model }}.objects.get(
+            {{ related.field }}={{ related.param }}
+        )
+{% endfor %}
+        
+{% endif %}
+        {{ method.obj_variable }} = {{ method.model }}.objects.create(
+{% for field in method.create_fields %}
+            {{ field.name }}={{ field.value }},
+{% endfor %}
+        )
+        return {{ method.obj_variable }}
+{% elif method.implementation_type == 'update' %}
+        try:
+            {{ method.obj_variable }} = {{ method.model }}.objects.get(
+                {{ method.filter_field }}={{ method.filter_param }}
+            )
+        except {{ method.model }}.DoesNotExist:
+            return None
+        
+        for field, value in {{ method.update_data }}.items():
+            if hasattr({{ method.obj_variable }}, field):
+                setattr({{ method.obj_variable }}, field, value)
+        
+        {{ method.obj_variable }}.save()
+        return {{ method.obj_variable }}
+{% elif method.implementation_type == 'delete' %}
+        try:
+            {{ method.obj_variable }} = {{ method.model }}.objects.get(
+                {{ method.filter_field }}={{ method.filter_param }}
+            )
+            {{ method.obj_variable }}.delete()
+            return True
+        except {{ method.model }}.DoesNotExist:
+            return False
+{% else %}
+        # TODO: Implement {{ method.name }}
+        raise NotImplementedError("{{ method.name }} not implemented")
+{% endif %}
+    
+{% endfor %}
+

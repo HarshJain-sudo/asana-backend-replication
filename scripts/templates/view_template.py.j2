@@ -1,0 +1,198 @@
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiResponse,
+    OpenApiParameter,
+    OpenApiExample
+)
+{% if has_interactor %}
+from {{ app_name }}.interactors.{{ interactor_module }} import (
+    {{ interactor_class }}
+)
+from {{ app_name }}.storages.storage_implementation import (
+    StorageImplementation
+)
+from {{ app_name }}.presenters.{{ presenter_module }} import (
+    {{ presenter_class }}
+)
+{% endif %}
+{% if serializers %}
+from {{ app_name }}.serializers import (
+{% for serializer in serializers %}
+    {{ serializer }},
+{% endfor %}
+)
+{% endif %}
+{% if exceptions %}
+from {{ app_name }}.exceptions.custom_exceptions import (
+{% for exception in exceptions %}
+    {{ exception }},
+{% endfor %}
+)
+{% endif %}
+from asana_backend.utils.validators import validate_uuid
+from asana_backend.utils.decorators.ratelimit import ratelimit
+{% if error_responses %}
+from asana_backend.utils.error_responses import (
+{% for error_func in error_responses %}
+    {{ error_func }},
+{% endfor %}
+)
+{% endif %}
+
+
+class {{ view_class }}(APIView):
+    """
+    {{ view_description }}
+    Matches Asana API: {{ method }} {{ path }}
+    """
+    
+    @ratelimit(key='ip', rate='{{ rate_limit }}', method='{{ method }}')
+    @extend_schema(
+        parameters=[
+{% for param in path_parameters %}
+            OpenApiParameter(
+                name='{{ param.name }}',
+                type={{ param.type }},
+                location=OpenApiParameter.PATH,
+                description='{{ param.description }}',
+                required={{ param.required }}
+            ),
+{% endfor %}
+{% for param in query_parameters %}
+            OpenApiParameter(
+                name='{{ param.name }}',
+                type={{ param.type }},
+                location=OpenApiParameter.QUERY,
+                description='{{ param.description }}',
+                required={{ param.required }}
+            ),
+{% endfor %}
+        ],
+{% if has_request_body %}
+        request={{ request_serializer }},
+{% endif %}
+        responses={
+{% for status_code, response in responses.items() %}
+            {{ status_code }}: OpenApiResponse(
+{% if response.serializer %}
+                response={{ response.serializer }},
+{% endif %}
+                description="{{ response.description }}",
+{% if response.examples %}
+                examples=[
+{% for example in response.examples %}
+                    OpenApiExample(
+                        '{{ example.name }}',
+                        value={{ example.value }}
+                    ),
+{% endfor %}
+                ]
+{% endif %}
+            ),
+{% endfor %}
+        },
+        summary="{{ summary }}",
+        description="{{ description }}",
+        tags=["{{ resource_tag }}"]
+    )
+    def {{ method_name }}(self, request{% for param in path_parameters %}, {{ param.name }}: str{% endfor %}):
+{% for param in path_parameters %}
+        # Validate {{ param.name }} format
+        try:
+            validate_uuid({{ param.name }})
+        except Exception:
+            return Response(
+                invalid_gid_error("{{ param.name }}"),
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+{% endfor %}
+{% if has_interactor %}
+        # Initialize dependencies
+        storage = StorageImplementation()
+        presenter = {{ presenter_class }}()
+        interactor = {{ interactor_class }}(
+            storage=storage,
+            presenter=presenter
+        )
+        
+{% endif %}
+{% if has_request_body %}
+        # Validate request data
+        serializer = {{ request_serializer }}(data=request.data)
+        if not serializer.is_valid():
+            error_response = {
+                'errors': [{
+                    'message': f"{{ resource }}: {str(serializer.errors)}",
+                    'help': (
+                        'For more information on API status codes and '
+                        'how to handle them, read the docs on errors: '
+                        'https://asana.github.io/developer-docs/#errors'
+                    ),
+                    'phrase': '6 sad squid snuggle softly'
+                }]
+            }
+            return Response(
+                error_response,
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+{% endif %}
+        try:
+{% if has_interactor %}
+            # Execute business logic
+            response = interactor.{{ interactor_method }}(
+{% for param in path_parameters %}
+                {{ param.name }}={{ param.name }},
+{% endfor %}
+{% if has_request_body %}
+                **serializer.validated_data
+{% endif %}
+            )
+            
+            return Response(response, status=status.HTTP_{{ success_status }})
+{% else %}
+            # TODO: Implement {{ method_name }} logic
+            return Response(
+                {'data': {'message': 'Not implemented yet'}},
+                status=status.HTTP_501_NOT_IMPLEMENTED
+            )
+{% endif %}
+{% if exceptions %}
+        except ({% for exc in exceptions %}{{ exc }}{% if not loop.last %}, {% endif %}{% endfor %}) as e:
+            error_response = {
+                'errors': [{
+                    'message': str(e),
+                    'help': (
+                        'For more information on API status codes and '
+                        'how to handle them, read the docs on errors: '
+                        'https://asana.github.io/developer-docs/#errors'
+                    ),
+                    'phrase': '6 sad squid snuggle softly'
+                }]
+            }
+            return Response(
+                error_response,
+                status=status.HTTP_404_NOT_FOUND
+            )
+{% endif %}
+        except Exception as e:
+            error_response = {
+                'errors': [{
+                    'message': str(e),
+                    'help': (
+                        'For more information on API status codes and '
+                        'how to handle them, read the docs on errors: '
+                        'https://asana.github.io/developer-docs/#errors'
+                    ),
+                    'phrase': '6 sad squid snuggle softly'
+                }]
+            }
+            return Response(
+                error_response,
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+

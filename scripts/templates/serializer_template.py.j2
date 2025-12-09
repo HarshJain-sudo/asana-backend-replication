@@ -1,0 +1,70 @@
+"""
+Serializers for {{ resource }} API endpoints.
+"""
+from rest_framework import serializers
+
+
+{% for serializer in serializers %}
+class {{ serializer.name }}(serializers.Serializer):
+    """{{ serializer.description }}"""
+{% if serializer.nested %}
+    
+    class {{ serializer.nested.name }}(serializers.Serializer):
+        """{{ serializer.nested.description }}"""
+{% for field in serializer.nested.fields %}
+        {{ field.name }} = serializers.{{ field.type }}(
+{% if field.required is defined %}
+            required={{ field.required }},
+{% endif %}
+{% if field.allow_null %}
+            allow_null={{ field.allow_null }},
+{% endif %}
+{% if field.allow_blank %}
+            allow_blank={{ field.allow_blank }},
+{% endif %}
+{% if field.max_length %}
+            max_length={{ field.max_length }},
+{% endif %}
+{% if field.help_text %}
+            help_text="{{ field.help_text }}",
+{% endif %}
+        )
+{% endfor %}
+    
+{% endif %}
+{% for field in serializer.fields %}
+{% if field.is_nested %}
+    {{ field.name }} = {{ field.nested_serializer }}(required={{ field.required }})
+{% else %}
+    {{ field.name }} = serializers.{{ field.type }}(
+{% if field.required is defined %}
+        required={{ field.required }},
+{% endif %}
+{% if field.allow_null %}
+        allow_null={{ field.allow_null }},
+{% endif %}
+{% if field.allow_blank %}
+        allow_blank={{ field.allow_blank }},
+{% endif %}
+{% if field.max_length %}
+        max_length={{ field.max_length }},
+{% endif %}
+{% if field.min_value %}
+        min_value={{ field.min_value }},
+{% endif %}
+{% if field.max_value %}
+        max_value={{ field.max_value }},
+{% endif %}
+{% if field.help_text %}
+        help_text="{{ field.help_text }}",
+{% endif %}
+{% if field.default is defined %}
+        default={{ field.default }},
+{% endif %}
+    )
+{% endif %}
+{% endfor %}
+
+
+{% endfor %}
+

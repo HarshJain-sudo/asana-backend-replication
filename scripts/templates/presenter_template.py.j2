@@ -1,0 +1,55 @@
+"""
+Presenter implementation for {{ resource }}.
+"""
+from typing import Dict, Any, List
+from {{ app_name }}.interactors.presenter_interfaces.presenter_interface import (
+    PresenterInterface
+)
+
+
+class {{ class_name }}(PresenterInterface):
+    """Presenter for {{ resource }} responses."""
+    
+    def {{ method_name }}(
+        self,
+        data: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Format {{ response_type }} response.
+        
+        Args:
+            data: Raw response data
+            
+        Returns:
+            Formatted response matching Asana API format
+        """
+        return {'data': data}
+{% if additional_methods %}
+    
+{% for method in additional_methods %}
+    def {{ method.name }}(
+        self,
+        {{ method.param_name }}: {{ method.param_type }}
+    ) -> Dict[str, Any]:
+        """{{ method.description }}"""
+        return {
+            'data': [
+                self._format_{{ method.item_type }}(item)
+                for item in {{ method.param_name }}
+            ]
+        }
+    
+    def _format_{{ method.item_type }}(
+        self,
+        item: Any
+    ) -> Dict[str, Any]:
+        """Format single {{ method.item_type }} object."""
+        return {
+{% for field in method.fields %}
+            '{{ field.name }}': {{ field.expression }},
+{% endfor %}
+        }
+    
+{% endfor %}
+{% endif %}
+

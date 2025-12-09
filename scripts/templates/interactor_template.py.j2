@@ -1,0 +1,102 @@
+"""
+Interactor for {{ action_description }}.
+"""
+from typing import Dict, Any, List, Optional
+from {{ app_name }}.interactors.storage_interfaces.storage_interface import (
+    StorageInterface
+)
+from {{ app_name }}.interactors.presenter_interfaces.presenter_interface import (
+    PresenterInterface
+)
+{% if exceptions %}
+from {{ app_name }}.exceptions.custom_exceptions import (
+{% for exception in exceptions %}
+    {{ exception }},
+{% endfor %}
+)
+{% endif %}
+
+
+class {{ class_name }}:
+    """{{ class_description }}"""
+    
+    def __init__(
+        self,
+        storage: StorageInterface,
+        presenter: PresenterInterface
+    ):
+        """
+        Initialize interactor with dependencies.
+        
+        Args:
+            storage: Storage interface implementation
+            presenter: Presenter interface implementation
+        """
+        self.storage = storage
+        self.presenter = presenter
+
+    def {{ method_name }}(
+        self,
+{% for param in parameters %}
+        {{ param.name }}: {{ param.type }}{% if param.optional %} = {{ param.default }}{% endif %},
+{% endfor %}
+    ) -> Dict[str, Any]:
+        """
+        {{ method_description }}
+        
+        Args:
+{% for param in parameters %}
+            {{ param.name }}: {{ param.description }}
+{% endfor %}
+        
+        Returns:
+            Dict containing response data
+{% if raises %}
+        
+        Raises:
+{% for exception in raises %}
+            {{ exception }}: {{ exception_descriptions[exception] }}
+{% endfor %}
+{% endif %}
+        """
+{% if validation_logic %}
+        # Validate input
+{% for validation in validation_logic %}
+        {{ validation }}
+{% endfor %}
+        
+{% endif %}
+{% if storage_calls %}
+        # Call storage layer
+{% for call in storage_calls %}
+        {{ call.variable }} = self.storage.{{ call.method }}(
+{% for arg in call.args %}
+            {{ arg.name }}={{ arg.value }},
+{% endfor %}
+        )
+        
+{% if call.check_none %}
+        if {{ call.variable }} is None:
+            raise {{ call.exception }}(
+                "{{ call.error_message }}"
+            )
+        
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if business_logic %}
+        # Business logic
+{% for logic in business_logic %}
+        {{ logic }}
+{% endfor %}
+        
+{% endif %}
+        # Format response
+        response_data = {
+{% for field in response_fields %}
+            '{{ field.name }}': {{ field.value }},
+{% endfor %}
+        }
+        
+        return self.presenter.{{ presenter_method }}(response_data)
+
