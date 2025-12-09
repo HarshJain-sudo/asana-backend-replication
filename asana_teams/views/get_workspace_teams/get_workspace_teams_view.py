@@ -1,0 +1,57 @@
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from asana_teams.interactors.get_workspace_teams_interactor import (
+    GetWorkspaceTeamsInteractor
+)
+from asana_teams.storages.storage_implementation import (
+    StorageImplementation
+)
+from asana_teams.presenters.get_teams_presenter_implementation import (
+    GetTeamsPresenterImplementation
+)
+from asana_teams.constants.constants import (
+    DEFAULT_OFFSET,
+    DEFAULT_LIMIT,
+    MAX_LIMIT,
+)
+from asana_backend.utils.validators import (
+    validate_uuid,
+    validate_pagination_params
+)
+from asana_backend.utils.decorators.ratelimit import ratelimit
+
+
+class GetWorkspaceTeamsView(APIView):
+    @ratelimit(key='ip', rate='5/s', method='GET')
+    def get(self, request, workspace_gid: str):
+        # Validate UUID format
+        try:
+            validate_uuid(workspace_gid)
+        except Exception:
+            return Response(
+                {'errors': [{'message': 'Invalid workspace GID format'}]},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Validate and normalize pagination params
+        offset, limit = validate_pagination_params(
+            offset=request.query_params.get('offset'),
+            limit=request.query_params.get('limit'),
+            max_limit=MAX_LIMIT
+        )
+
+        storage = StorageImplementation()
+        presenter = GetTeamsPresenterImplementation()
+        interactor = GetWorkspaceTeamsInteractor(
+            storage=storage,
+            presenter=presenter
+        )
+
+        response = interactor.get_workspace_teams(
+            workspace_gid=workspace_gid,
+            offset=offset,
+            limit=limit
+        )
+        return Response(response, status=status.HTTP_200_OK)
+

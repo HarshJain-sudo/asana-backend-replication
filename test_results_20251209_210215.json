@@ -1,0 +1,53 @@
+{
+  "timestamp": "20251209_210215",
+  "summary": {
+    "total": 31,
+    "passed": 25,
+    "failed": 6,
+    "errors": [
+      "PUT Update workspace - invalid UUID (400) - Expected 400, Got 500",
+      "POST Create user - duplicate email (409) - Expected 409, Got 400",
+      "GET List users - filtered by workspace - Expected 200, Got 500",
+      "GET List teams - Expected 200, Got 500",
+      "POST Create task - valid data - Expected 201, Got 405",
+      "POST Create task - missing required fields (400) - Expected 400, Got 405"
+    ]
+  },
+  "created_resources": {
+    "workspace_gid": "e0728daf-e5cc-4bb7-a58d-61dbbbd32972",
+    "user_gid": "8d580868-187f-4fa5-bccf-fe1324aeaa0c"
+  },
+  "test_log": [
+    "[21:02:15] [INFO] POST Create workspace - valid data: PASS",
+    "[21:02:15] [INFO] POST Create workspace - missing name (400): PASS",
+    "[21:02:15] [INFO] GET List workspaces: PASS",
+    "[21:02:15] [INFO] GET List workspaces - with pagination: PASS",
+    "[21:02:15] [INFO] GET List workspaces - invalid limit (400): PASS",
+    "[21:02:15] [INFO] GET Get workspace - valid gid: PASS",
+    "[21:02:15] [INFO] GET Get workspace - with opt_fields: PASS",
+    "[21:02:15] [INFO] GET Get workspace - invalid UUID (400): PASS",
+    "[21:02:15] [INFO] GET Get workspace - not found (404): PASS",
+    "[21:02:15] [INFO] PUT Update workspace - valid data: PASS",
+    "[21:02:15] [INFO] PUT Update workspace - invalid UUID (400): FAIL",
+    "[21:02:15] [INFO] POST Create user - valid data: PASS",
+    "[21:02:15] [INFO] POST Create user - missing email (400): PASS",
+    "[21:02:15] [INFO] POST Create user - duplicate email (409): FAIL",
+    "[21:02:15] [INFO] GET List users: PASS",
+    "[21:02:15] [INFO] GET List users - filtered by workspace: FAIL",
+    "[21:02:15] [INFO] GET Get user - valid gid: PASS",
+    "[21:02:15] [INFO] GET Get user - invalid UUID (400): PASS",
+    "[21:02:15] [INFO] GET Get user - not found (404): PASS",
+    "[21:02:15] [INFO] PUT Update user - valid data: PASS",
+    "[21:02:15] [INFO] GET Get user workspaces: PASS",
+    "[21:02:15] [INFO] GET List teams: FAIL",
+    "[21:02:15] [INFO] GET List tags: PASS",
+    "[21:02:15] [INFO] POST Create task - valid data: FAIL",
+    "[21:02:15] [INFO] POST Create task - missing required fields (400): FAIL",
+    "[21:02:15] [INFO] GET List tasks: PASS",
+    "[21:02:15] [INFO] GET List tasks - filtered by workspace: PASS",
+    "[21:02:15] [INFO] GET List tasks - filtered by assignee: PASS",
+    "[21:02:15] [INFO] GET Search tasks with filters: PASS",
+    "[21:02:15] [INFO] GET Get workspace events: PASS",
+    "[21:02:15] [INFO] GET Get workspace events with sync token: PASS"
+  ]
+}

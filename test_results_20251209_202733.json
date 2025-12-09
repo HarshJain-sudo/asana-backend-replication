@@ -1,0 +1,46 @@
+{
+  "timestamp": "20251209_202733",
+  "summary": {
+    "total": 11,
+    "passed": 0,
+    "failed": 11,
+    "errors": [
+      "POST Create workspace - valid data - Expected 201, Got 0 (Spec mismatch)",
+      "POST Create workspace - missing name (400) - Expected 400, Got 0",
+      "GET List workspaces - Expected 200, Got 0 (Spec mismatch)",
+      "GET List workspaces - with pagination - Expected 200, Got 0",
+      "GET List workspaces - invalid limit (400) - Expected 400, Got 0",
+      "POST Create user - valid data - Expected 201, Got 0 (Spec mismatch)",
+      "POST Create user - missing email (400) - Expected 400, Got 0",
+      "POST Create user - duplicate email (409) - Expected 409, Got 0",
+      "GET List users - Expected 200, Got 0",
+      "GET List teams - Expected 200, Got 0",
+      "GET List tags - Expected 200, Got 0"
+    ]
+  },
+  "created_resources": {},
+  "test_log": [
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_workspaces/workspaces/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] POST Create workspace - valid data: FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_workspaces/workspaces/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] POST Create workspace - missing name (400): FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_workspaces/workspaces/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] GET List workspaces: FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_workspaces/workspaces/?limit=10&offset=0 (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] GET List workspaces - with pagination: FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_workspaces/workspaces/?limit=-1 (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] GET List workspaces - invalid limit (400): FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_users/users/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] POST Create user - valid data: FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_users/users/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] POST Create user - missing email (400): FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_users/users/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] POST Create user - duplicate email (409): FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_users/users/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] GET List users: FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_teams/teams/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] GET List teams: FAIL",
+    "[20:27:33] [ERROR] Request failed: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/asana_tags/tags/ (Caused by NewConnectionError(\"HTTPConnection(host='localhost', port=8000): Failed to establish a new connection: [Errno 111] Connection refused\"))",
+    "[20:27:33] [INFO] GET List tags: FAIL"
+  ]
+}

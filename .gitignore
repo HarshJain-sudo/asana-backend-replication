@@ -1,0 +1,225 @@
+# ==================================
+# Python & Django Project .gitignore
+# ==================================
+
+# ============ Python ============
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# ============ Virtual Environments ============
+venv/
+.venv/
+ENV/
+env/
+.env/
+env.bak/
+venv.bak/
+
+# ============ Django ============
+# Database
+*.db
+*.sqlite3
+*.sqlite3-journal
+db.sqlite3
+db.sqlite3-journal
+
+# Django migrations (optional - remove if you want to track them)
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Django static files
+staticfiles/
+static_root/
+media/
+media_root/
+
+# Django secret key & settings
+.env
+.env.local
+.env.*.local
+local_settings.py
+
+# Django logs
+*.log
+logs/
+
+# ============ IDEs & Editors ============
+# VSCode
+.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace
+
+# Cursor IDE
+.cursor/
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============ Operating System ============
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+$RECYCLE.BIN/
+
+# Linux
+.Trash-*
+.nfs*
+
+# ============ Project Specific ============
+# Test results
+test_results_*.json
+/tmp/
+*.txt.tmp
+
+# API Testing
+API_TESTING_NOTEBOOK.ipynb
+APITesting.ipynb
+
+# Server logs
+/tmp/*.log
+server.log
+django_server.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# Documentation (temporary/generated)
+# Uncomment if you don't want to track these
+# IMPLEMENTATION_STATUS.md
+# TEST_RESULTS_SUMMARY.md
+# COMPREHENSIVE_TEST_STATUS.md
+
+# ============ Dependencies ============
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Poetry
+poetry.lock
+
+# Pipenv
+Pipfile.lock
+
+# ============ Security ============
+# Secrets and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+secrets.json
+credentials.json
+
+# ============ Misc ============
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.rej
+*~
+
+# Compressed files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Node modules (if using frontend tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ============ Keep These ============
+# Force include important files
+!.gitkeep
+!README.md
+!requirements.txt
+!manage.py
+!api_spec.txt
+

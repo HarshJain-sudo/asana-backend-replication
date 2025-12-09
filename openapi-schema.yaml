@@ -1,0 +1,1002 @@
+openapi: 3.0.3
+info:
+  title: Asana Backend Replica API
+  version: 1.0.0
+  description: A comprehensive Django REST Framework backend service that replicates
+    core functionalities of Asana - a project management and team collaboration platform.
+paths:
+  /api/asana_attachments/attachments/{attachment_gid}/:
+    get:
+      operationId: asana_attachments_attachments_retrieve
+      parameters:
+      - in: path
+        name: attachment_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_attachments
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_attachments/tasks/{task_gid}/attachments/:
+    get:
+      operationId: asana_attachments_tasks_attachments_retrieve
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_attachments
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_projects/projects/:
+    get:
+      operationId: asana_projects_projects_retrieve
+      tags:
+      - asana_projects
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_projects/projects/{project_gid}/:
+    get:
+      operationId: asana_projects_projects_retrieve_2
+      parameters:
+      - in: path
+        name: project_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_projects
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_projects/workspaces/{workspace_gid}/projects/:
+    get:
+      operationId: asana_projects_workspaces_projects_retrieve
+      parameters:
+      - in: path
+        name: workspace_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_projects
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_stories/stories/{story_gid}/:
+    get:
+      operationId: asana_stories_stories_retrieve
+      parameters:
+      - in: path
+        name: story_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_stories
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_stories/tasks/{task_gid}/stories/:
+    get:
+      operationId: asana_stories_tasks_stories_retrieve
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_stories
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tags/tags/:
+    get:
+      operationId: asana_tags_tags_retrieve
+      tags:
+      - asana_tags
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tags/tags/{tag_gid}/:
+    get:
+      operationId: asana_tags_tags_retrieve_2
+      parameters:
+      - in: path
+        name: tag_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_tags
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tags/workspaces/{workspace_gid}/tags/:
+    get:
+      operationId: asana_tags_workspaces_tags_retrieve
+      parameters:
+      - in: path
+        name: workspace_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_tags
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tasks/tasks/:
+    get:
+      operationId: asana_tasks_tasks_retrieve
+      description: Retrieves a paginated list of tasks with optional filters for workspace,
+        assignee, and completion status.
+      summary: List all tasks
+      parameters:
+      - in: query
+        name: assignee_gid
+        schema:
+          type: string
+        description: Filter tasks by assignee UUID
+      - in: query
+        name: completed
+        schema:
+          type: boolean
+        description: Filter by completion status
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: 'Number of results (default: 50, max: 100)'
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: 'Offset for pagination (default: 0)'
+      - in: query
+        name: workspace_gid
+        schema:
+          type: string
+        description: Filter tasks by workspace UUID
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+    post:
+      operationId: asana_tasks_tasks_create
+      description: Creates a new task in the specified workspace. Requires task name
+        and workspace GID.
+      summary: Create a new task
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskSingleResponse'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+          description: ''
+  /api/asana_tasks/tasks/{task_gid}/:
+    get:
+      operationId: asana_tasks_tasks_retrieve_2
+      description: Retrieves detailed information about a specific task by its UUID.
+      summary: Get a single task
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        description: UUID of the task
+        required: true
+        examples:
+          ExampleUUID:
+            value: 123e4567-e89b-12d3-a456-426614174000
+            summary: Example UUID
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: Task retrieved successfully
+        '400':
+          description: Invalid UUID format
+        '404':
+          description: Task not found
+    put:
+      operationId: asana_tasks_tasks_update
+      description: Updates an existing task. All fields are optional.
+      summary: Update a task
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        description: UUID of the task to update
+        required: true
+      tags:
+      - Tasks
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: Task updated successfully
+        '400':
+          description: Bad Request
+        '404':
+          description: Task not found
+    delete:
+      operationId: asana_tasks_tasks_destroy
+      description: Permanently deletes a task. This action cannot be undone.
+      summary: Delete a task
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        description: UUID of the task to delete
+        required: true
+      tags:
+      - Tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: Task deleted successfully
+        '400':
+          description: Invalid UUID format
+        '404':
+          description: Task not found
+  /api/asana_tasks/tasks/{task_gid}/addFollowers:
+    post:
+      operationId: asana_tasks_tasks_addFollowers_create
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tasks/tasks/{task_gid}/addProject:
+    post:
+      operationId: asana_tasks_tasks_addProject_create
+      description: Associates a task with a project. A task can belong to multiple
+        projects.
+      summary: Add project to task
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        description: UUID of the task
+        required: true
+      tags:
+      - Tasks - Relationships
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskProjectRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TaskProjectRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TaskProjectRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: Project added to task successfully
+        '400':
+          description: Bad Request
+        '404':
+          description: Task or Project not found
+  /api/asana_tasks/tasks/{task_gid}/addTag:
+    post:
+      operationId: asana_tasks_tasks_addTag_create
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tasks/tasks/{task_gid}/removeFollowers:
+    post:
+      operationId: asana_tasks_tasks_removeFollowers_create
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tasks/tasks/{task_gid}/removeProject:
+    post:
+      operationId: asana_tasks_tasks_removeProject_create
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_tasks/tasks/{task_gid}/removeTag:
+    post:
+      operationId: asana_tasks_tasks_removeTag_create
+      parameters:
+      - in: path
+        name: task_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_tasks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_teams/teams/:
+    get:
+      operationId: asana_teams_teams_retrieve
+      description: "\n        Retrieves a list of all teams across all workspaces.\n
+        \       \n        **Features:**\n        - Pagination support\n        - Returns
+        team details with workspace info\n        "
+      summary: List all teams
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: 'Number of results (default: 50, max: 100)'
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: 'Offset for pagination (default: 0)'
+      tags:
+      - Teams
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: List of teams retrieved successfully
+  /api/asana_teams/teams/{team_gid}/:
+    get:
+      operationId: asana_teams_teams_retrieve_2
+      description: Retrieves detailed information about a specific team by UUID.
+      summary: Get a single team
+      parameters:
+      - in: path
+        name: team_gid
+        schema:
+          type: string
+        description: UUID of the team
+        required: true
+      tags:
+      - Teams
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: Team retrieved successfully
+        '400':
+          description: Invalid UUID format
+        '404':
+          description: Team not found
+  /api/asana_teams/workspaces/{workspace_gid}/teams/:
+    get:
+      operationId: asana_teams_workspaces_teams_retrieve
+      parameters:
+      - in: path
+        name: workspace_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_teams
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_users/users/:
+    get:
+      operationId: asana_users_users_retrieve
+      description: "\n        Retrieves a list of all users in the system.\n        \n
+        \       **Features:**\n        - Pagination support (offset/limit)\n        -
+        Filter by workspace\n        - Default limit: 50, Maximum: 100\n        \n
+        \       **Use Cases:**\n        - Get all users in system\n        - Filter
+        users by workspace\n        - Paginate through large user lists\n        "
+      summary: List all users
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: 'Number of results to return (default: 50, max: 100)'
+        examples:
+          Default:
+            value: 50
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: 'Offset for pagination (default: 0)'
+        examples:
+          Default:
+            value: 0
+      - in: query
+        name: workspace_gid
+        schema:
+          type: string
+        description: Filter users by workspace UUID
+      tags:
+      - Users
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: List of users retrieved successfully
+        '400':
+          description: Bad Request - Invalid pagination parameters
+  /api/asana_users/users/{user_gid}/:
+    get:
+      operationId: asana_users_users_retrieve_2
+      description: "\n        Retrieves detailed information about a specific user
+        by their UUID.\n        \n        **Returns:**\n        - User profile information\n
+        \       - Email address\n        - Profile photo URL (if available)\n        -
+        Account timestamps\n        "
+      summary: Get a single user
+      parameters:
+      - in: path
+        name: user_gid
+        schema:
+          type: string
+        description: UUID of the user
+        required: true
+        examples:
+          ExampleUUID:
+            value: 123e4567-e89b-12d3-a456-426614174000
+            summary: Example UUID
+      tags:
+      - Users
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: User retrieved successfully
+        '400':
+          description: Invalid UUID format
+        '404':
+          description: User not found
+  /api/asana_users/users/{user_gid}/workspaces/:
+    get:
+      operationId: asana_users_users_workspaces_retrieve
+      parameters:
+      - in: path
+        name: user_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_users
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_users/users/me/:
+    get:
+      operationId: asana_users_users_me_retrieve
+      tags:
+      - asana_users
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_webhooks/webhooks/:
+    get:
+      operationId: asana_webhooks_webhooks_retrieve
+      description: "\n        Retrieves a list of all registered webhooks.\n        \n
+        \       **Features:**\n        - Pagination support\n        - Filter by resource
+        type\n        - Shows active/inactive status\n        \n        **Resource
+        Types:**\n        - task\n        - project\n        - story\n        - workspace\n
+        \       "
+      summary: List all webhooks
+      parameters:
+      - in: query
+        name: limit
+        schema:
+          type: integer
+        description: 'Number of results (default: 50, max: 100)'
+      - in: query
+        name: offset
+        schema:
+          type: integer
+        description: 'Offset for pagination (default: 0)'
+      - in: query
+        name: resource
+        schema:
+          type: string
+        description: Filter by resource type (task, project, etc.)
+        examples:
+          TaskWebhooks:
+            value: task
+            summary: Task webhooks
+          ProjectWebhooks:
+            value: project
+            summary: Project webhooks
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: List of webhooks retrieved successfully
+  /api/asana_webhooks/webhooks/{webhook_gid}/:
+    get:
+      operationId: asana_webhooks_webhooks_retrieve_2
+      description: "\n        Retrieves detailed information about a specific webhook
+        by UUID.\n        \n        **Returns:**\n        - Webhook configuration\n
+        \       - Target URL\n        - Resource details\n        - Active status\n
+        \       - Secret for verification\n        "
+      summary: Get a single webhook
+      parameters:
+      - in: path
+        name: webhook_gid
+        schema:
+          type: string
+        description: UUID of the webhook
+        required: true
+      tags:
+      - Webhooks
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: Webhook retrieved successfully
+        '400':
+          description: Invalid UUID format
+        '404':
+          description: Webhook not found
+  /api/asana_workspaces/workspaces/:
+    get:
+      operationId: asana_workspaces_workspaces_retrieve
+      tags:
+      - asana_workspaces
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /api/asana_workspaces/workspaces/{workspace_gid}/:
+    get:
+      operationId: asana_workspaces_workspaces_retrieve_2
+      parameters:
+      - in: path
+        name: workspace_gid
+        schema:
+          type: string
+        required: true
+      tags:
+      - asana_workspaces
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+components:
+  schemas:
+    AssigneeStatusEnum:
+      enum:
+      - upcoming
+      - later
+      - new
+      - inbox
+      - today
+      type: string
+      description: |-
+        * `upcoming` - Upcoming
+        * `later` - Later
+        * `new` - New
+        * `inbox` - Inbox
+        * `today` - Today
+    ErrorMessage:
+      type: object
+      description: Error message object
+      properties:
+        message:
+          type: string
+      required:
+      - message
+    ErrorResponse:
+      type: object
+      description: Standard error response
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ErrorMessage'
+      required:
+      - errors
+    TaskListResponse:
+      type: object
+      description: Response for list of tasks
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskResponse'
+      required:
+      - data
+    TaskProjectRequest:
+      type: object
+      properties:
+        project_gid:
+          type: string
+          format: uuid
+      required:
+      - project_gid
+    TaskRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        workspace_gid:
+          type: string
+          format: uuid
+          writeOnly: true
+        assignee_gid:
+          type: string
+          format: uuid
+          writeOnly: true
+          nullable: true
+        assignee_status:
+          $ref: '#/components/schemas/AssigneeStatusEnum'
+        completed:
+          type: boolean
+        due_on:
+          type: string
+          format: date
+          nullable: true
+        due_at:
+          type: string
+          format: date-time
+          nullable: true
+        start_on:
+          type: string
+          format: date
+          nullable: true
+        start_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        html_notes:
+          type: string
+          nullable: true
+      required:
+      - name
+      - workspace_gid
+    TaskResponse:
+      type: object
+      description: Complete task response object
+      properties:
+        gid:
+          type: string
+          format: uuid
+        name:
+          type: string
+        workspace:
+          $ref: '#/components/schemas/WorkspaceNested'
+        assignee:
+          allOf:
+          - $ref: '#/components/schemas/UserNested'
+          nullable: true
+        assignee_status:
+          type: string
+          nullable: true
+        completed:
+          type: boolean
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        due_on:
+          type: string
+          format: date
+          nullable: true
+        due_at:
+          type: string
+          format: date-time
+          nullable: true
+        start_on:
+          type: string
+          format: date
+          nullable: true
+        start_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        html_notes:
+          type: string
+          nullable: true
+        num_hearts:
+          type: integer
+        num_likes:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      required:
+      - assignee
+      - assignee_status
+      - completed
+      - completed_at
+      - created_at
+      - due_at
+      - due_on
+      - gid
+      - html_notes
+      - name
+      - notes
+      - num_hearts
+      - num_likes
+      - start_at
+      - start_on
+      - updated_at
+      - workspace
+    TaskSingleResponse:
+      type: object
+      description: Response for single task
+      properties:
+        data:
+          $ref: '#/components/schemas/TaskResponse'
+      required:
+      - data
+    TaskUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        assignee_gid:
+          type: string
+          format: uuid
+          writeOnly: true
+          nullable: true
+        assignee_status:
+          $ref: '#/components/schemas/AssigneeStatusEnum'
+        completed:
+          type: boolean
+        due_on:
+          type: string
+          format: date
+          nullable: true
+        due_at:
+          type: string
+          format: date-time
+          nullable: true
+        start_on:
+          type: string
+          format: date
+          nullable: true
+        start_at:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        html_notes:
+          type: string
+          nullable: true
+    UserNested:
+      type: object
+      description: Nested user object in responses
+      properties:
+        gid:
+          type: string
+          format: uuid
+        name:
+          type: string
+      required:
+      - gid
+      - name
+    WorkspaceNested:
+      type: object
+      description: Nested workspace object in responses
+      properties:
+        gid:
+          type: string
+          format: uuid
+        name:
+          type: string
+      required:
+      - gid
+      - name
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
